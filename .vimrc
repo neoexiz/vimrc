@@ -1,6 +1,5 @@
 " All system-wide defaults are set in $VIMRUNTIME/debian.vim and sourced by
-" the call to :runtime you can find below.  If you wish to change any of those
-" settings, you should do it in this file (/etc/vim/vimrc), since debian.vim
+" the call to :runtime you can find below.  If you wish to change any of those " settings, you should do it in this file (/etc/vim/vimrc), since debian.vim
 " will be overwritten everytime an upgrade of the vim packages is performed.
 " It is recommended to make changes after sourcing debian.vim since it alters
 " the value of the 'compatible' option.
@@ -37,21 +36,22 @@ endif
 "  filetype plugin indent on
 "endif
 
-let mapleader=","
+let mapleader=";"
+filetype on
 " The following are commented out as they cause vim to behave a lot
 " differently from regular Vi. They are highly recommended though.
 set showcmd   " Show (partial) command in status line.
 "set showmatch		" Show matching brackets.
-"set ignorecase		" Do case insensitive matching
-"set smartcase		" Do smart case matching
-"set incsearch		" Incremental search
 "set autowrite		" Automatically save before commands like :next and :make
 set hidden        " Hide buffers when they are abandoned
 set mouse=a		" Enable mouse usage (all modes)
 set fileencodings=utf-8,bg18030,gbk,big5 "Set fileencodings
 set nocompatible	" No compatible with vi
-let g:solarized_termcolors=256
-"colorscheme molokai	" Color with molokai/solarized
+set wildmenu
+" 配色方案
+set background=dark
+colorscheme molokai
+"colorscheme solarized
 set ruler
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
@@ -59,11 +59,11 @@ set cursorline cursorcolumn
 
 set magic
 set backspace=2
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set shiftround
-"set expandtab
+set expandtab
 
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
@@ -73,7 +73,8 @@ set colorcolumn=+1
 
 set autoindent
 set nobackup
-set ignorecase smartcase
+set ignorecase
+set smartcase
 set incsearch
 set hlsearch
 set guioptions-=T
@@ -84,29 +85,45 @@ set foldmethod=syntax
 set number
 
 " Vundle setup
-filetype on
+filetype off
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
+call vundle#begin()
 " Bundle Plugin
 Bundle 'gmarik/vundle'
-Bundle 'NERD_tree-Project'
-Bundle 'scrooloose/syntastic'
-Bundle 'a.vim'
+Bundle 'derekwyatt/vim-fswitch'
 Bundle 'c.vim'
-Bundle 'majutsushi/tagbar'
-Bundle 'The-NERD-tree'
+" Color Scheme
 Bundle 'molokai'
+Bundle 'altercation/vim-colors-solarized'
+
 Bundle 'ctrlp.vim'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'christoomey/vim-run-interactive'
-" Code Compeletement
+
+Bundle 'suan/vim-instant-markdown'
+" 项目管理
+Bundle 'fholgado/minibufexpl.vim'
+Bundle 'NERD_tree-Project'
+Bundle 'The-NERD-tree'
+" 代码定义，函数，宏
+Bundle 'majutsushi/tagbar'
+" 代码视觉加强
+Bundle 'octol/vim-cpp-enhanced-highlight'
+Bundle 'nathanaelkane/vim-indent-guides'
+" 代码收藏
+Bundle 'kshenoy/vim-signature'
+" 代码语法检查
+Bundle 'scrooloose/syntastic'
+" 代码补全
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'ervandew/supertab'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
-" make YCM compatible with UltiSnips (Using supertab)
+call vundle#end()
+filetype plugin indent on
+" ### Universal Configuration ###
+" Make YCM compatible with UltiSnips (Using supertab)
 let g:ycm_key_list_select_completion = []
 let g:ycm_key_list_previous_completion = []
 let g:SuperTabDefaultCompletionType = '<C-n>'
@@ -116,23 +133,23 @@ set t_Co=256
 if ($t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 	syntax on
 endif
-
 syntax enable "Javascript syntax hightlight
 autocmd BufRead,BufNewFile Appraisals set filetype=ruby
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd Syntax javascript set syntax=jquery
-
-colorscheme molokai
 highlight NonText guibg=#060606
 highlight Folded guibg=$0A0A0A guifg=#9090D0
 
 " Plugin The-NERD-tree
 let NERDChristmasTree=0
 let NERDTreeWinSize=35
+let NERDTreeWinPos="left"
+let NERDTreeshowHidden=1
 let NERDTreeChDirMode=2
 let NERDTreeIgnore=['\~$','\.pyc$','\.swp$']
 let NERDTreeShowBookmarks=1
-let NERDTreeWinPos="left"
+let NERDTreeMinimalUI=1
+let NERDTreeAutoDeleteBuffer=1
 " Automatically open a NERDTree if no files where specified
 autocmd vimenter * if !argc() | NERDTree | endif
 " Close vim if the only window left open is a NERDTree
@@ -162,6 +179,7 @@ endif
 " Plugin vim-powerline
 set laststatus=2 "Always display the status line
 set statusline+=%{fugitive#statusline()} " Git hotness
+let g:Powerline_colorscheme='solarized256'
 
 " Plugin christoomey/vim-run-interactive
 nnoremap <Leader>r :RunInInteractiveShell<space>
@@ -179,12 +197,43 @@ set statusline+=%*
 " Plugin YouCompleteMe
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 
-" Leader set
-nmap <leader>w :w<cr>
-nmap <leader>e :tabe<space>
-nmap <leader>o :e<space>
-nmap <leader>q :q<cr>
+" Plugin Indent guides
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
+nmap <silent> <Leader>i <Plug>IndentGuidesToggle
 
+" Plugin MiniBuf Explorer
+map <Leader>bl :MBEToggle<cr>
+map <C-Tab> :MBEbn<cr>
+map <C-S-Tab> :MBEbp<cr>
+
+" Plugin instant_markdown
+let g:instant_markdown_autostart=1
+
+" Leader set
+nmap <Leader>e :tabe<space>
+nmap <Leader>o :e<space>
+nmap <Leader>q :q<cr>
+nmap <Leader>w :w<cr>
+nmap <Leader>WQ :wa<CR>:q<CR>
+" 设置快捷键将选中文本块复制至系统剪贴板
+vnoremap <Leader>y "+y
+" 设置快捷键将系统剪贴板粘贴至vim
+nmap <Leader>p "+p
+" *.cpp和*.h间切换
+nmap <silent> <Leader>sw :FSHere<cr>
+" 一键编译
+nmap <Leader>m :wa<cr>:make<cr><cr>:cw<cr>
+
+set guioptions-=l
+set guioptions-=L
+set guioptions-=r
+set guioptions-=R
+set guioptions-=m
+set guioptions-=T
+set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+"autocmd BufWritePost $MYVIMRC source $MYVIMRC
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
