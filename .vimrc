@@ -29,27 +29,90 @@ endif
 "  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 "endif
 
-" Uncomment the following to have Vim load indentation rules and plugins
-" according to the detected filetype.
-"if has("autocmd")
-"  filetype plugin indent on
-"endif
-let mapleader=";"
-filetype on
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
-set showcmd   " Show (partial) command in status line.
-set hidden        " Hide buffers when they are abandoned
-set mouse=a		" Enable mouse usage (all modes)
-set fileencodings=utf-8,bg18030,gbk,big5 "Set fileencodings
-set nocompatible	" No compatible with vi
-set wildmenu
-set ruler
+" Vundle requirements
+set nocompatible    " No compatible with vi
+filetype off
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'fcitx.vim'
+Plugin 'derekwyatt/vim-fswitch'
+Plugin 'c.vim'
+" Color Scheme
+Plugin 'molokai'
+Plugin 'altercation/vim-colors-solarized'
+
+Plugin 'ctrlp.vim'
+" 提示栏，依赖tagbar
+Plugin 'Lokaltog/vim-powerline'
+" 处理git信息
+Plugin 'tpope/vim-fugitive'
+" 执行外部命令
+Plugin 'christoomey/vim-run-interactive'
+" 项目管理
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'NERD_tree-Project'
+Plugin 'The-NERD-tree'
+" 代码定义，函数，宏
+Plugin 'majutsushi/tagbar'
+" 代码视觉加强
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'nathanaelkane/vim-indent-guides'
+" 代码收藏
+Plugin 'kshenoy/vim-signature'
+" 代码语法检查
+Plugin 'scrooloose/syntastic'
+" 代码补全
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'ervandew/supertab'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
+highlight WhitespaceEOL ctermbg=red guibg=red
+match WhitespaceEOL /\s\+$/
+
+let mapleader=";"
+
+" The following are commented out as they cause vim to behave a lot
+" differently from regular Vi. They are highly recommended though.
+
+" Show (partial) command in status line.
+set showcmd
+" Hide buffers when they are abandoned
+set hidden
+" Enable mouse usage (all modes)
+set mouse=a
+"Set fileencodings
+set fileencodings=utf-8,bg18030,gbk,big5
+" Make it obvious where 80 characters is
+set textwidth=80
+
+set wildmenu
+set ruler
 set cursorline 
 set cursorcolumn
-
 set magic
 set backspace=2
 set tabstop=4
@@ -57,13 +120,7 @@ set shiftwidth=4
 set softtabstop=4
 set shiftround
 set expandtab
-
-highlight WhitespaceEOL ctermbg=red guibg=red
-match WhitespaceEOL /\s\+$/
-" Make it obvious where 80 characters is
-set textwidth=80
 set colorcolumn=+1
-
 set autoindent
 set nobackup
 set ignorecase
@@ -75,63 +132,23 @@ set foldenable
 set foldmethod=syntax
 set number
 
-" Vundle setup
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#begin()
-" Bundle Plugin
-Bundle 'gmarik/vundle'
-Bundle 'fcitx.vim'
-Bundle 'derekwyatt/vim-fswitch'
-Bundle 'c.vim'
-" Color Scheme
-Bundle 'molokai'
-Bundle 'altercation/vim-colors-solarized'
-
-Bundle 'ctrlp.vim'
-" 提示栏，依赖tagbar
-Bundle 'Lokaltog/vim-powerline'
-" 处理git信息
-Bundle 'tpope/vim-fugitive'
-" 执行外部命令
-Bundle 'christoomey/vim-run-interactive'
-" 项目管理
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'NERD_tree-Project'
-Bundle 'The-NERD-tree'
-" 代码定义，函数，宏
-Bundle 'majutsushi/tagbar'
-" 代码视觉加强
-Bundle 'octol/vim-cpp-enhanced-highlight'
-Bundle 'nathanaelkane/vim-indent-guides'
-" 代码收藏
-Bundle 'kshenoy/vim-signature'
-" 代码语法检查
-Bundle 'scrooloose/syntastic'
-" 代码补全
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'ervandew/supertab'
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-call vundle#end()
-filetype on
 " ### Universal Configuration ###
+
+" Plugin YouCompleteMe
 " Make YCM compatible with UltiSnips (Using supertab)
 let g:ycm_key_list_select_completion = []
 let g:ycm_key_list_previous_completion = []
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-" 配色方案
-set background=dark
-colorscheme molokai
-"colorscheme solarized
-
 " Plugin molokai
+colorscheme molokai
+set background=dark
 set t_Co=256
 if ($t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 	syntax on
 endif
-syntax enable "Javascript syntax hightlight
+" Javascript syntax hightlight
+syntax enable
 autocmd BufRead,BufNewFile Appraisals set filetype=ruby
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd Syntax javascript set syntax=jquery
@@ -165,7 +182,7 @@ nmap <F6> :TagbarToggle<cr>
 autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()
 
 " Plugin ctrlp
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.png,*.jpg,*jpeg,*.gif "MacOSX/Linux
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.png,*.jpg,*jpeg,*.gif
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 if executable('ag')
 	" Use Ag over Grep
