@@ -140,22 +140,6 @@ let g:ycm_key_list_select_completion = []
 let g:ycm_key_list_previous_completion = []
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-" Plugin molokai
-colorscheme molokai
-set background=dark
-set t_Co=256
-if ($t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-	syntax on
-endif
-" Javascript syntax hightlight
-syntax enable
-autocmd BufRead,BufNewFile Appraisals set filetype=ruby
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd Syntax javascript set syntax=jquery
-highlight NonText guibg=#060606
-highlight Folded guibg=#0A0A0A
-highlight Folded guifg=#9090D0
-
 " Plugin The-NERD-tree
 let NERDChristmasTree=0
 let NERDTreeWinSize=35
