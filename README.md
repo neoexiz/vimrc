@@ -1,22 +1,12 @@
 # vimrc
 
-## Prerequisite
-
-```bash
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-```
-
 ## Usage
 
 ```
 Download `.vimrc` into `~/.vimrc`
 ```
 
-Install all plugins, run command in terminal and wait to install all plugin:
-
-```bash
-vim -c 'PluginInstal' -c 'qa'
-```
+Install all plugins automatically after enter `vim`, wait for all plugins installed and quit vim (`:q`).
 
 ## License
 

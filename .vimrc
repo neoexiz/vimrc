@@ -29,212 +29,84 @@ endif
 "  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 "endif
 
-" Vundle requirements
-set nocompatible    " No compatible with vi
-filetype off
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" Color
+Plug 'junegunn/seoul256.vim'
 
-Plugin 'fcitx.vim'
-Plugin 'derekwyatt/vim-fswitch'
-Plugin 'c.vim'
-" Color Scheme
-Plugin 'molokai'
-Plugin 'altercation/vim-colors-solarized'
+" Nocompatible with vi
+Plug 'tpope/vim-sensible'
 
-Plugin 'ctrlp.vim'
-" 提示栏，依赖tagbar
-Plugin 'Lokaltog/vim-powerline'
-" 处理git信息
-Plugin 'tpope/vim-fugitive'
-" 执行外部命令
-Plugin 'christoomey/vim-run-interactive'
-" 项目管理
-Plugin 'fholgado/minibufexpl.vim'
-Plugin 'NERD_tree-Project'
-Plugin 'The-NERD-tree'
-" 代码定义，函数，宏
-Plugin 'majutsushi/tagbar'
-" 代码视觉加强
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'nathanaelkane/vim-indent-guides'
-" 代码收藏
-Plugin 'kshenoy/vim-signature'
-" 代码语法检查
-Plugin 'scrooloose/syntastic'
-" 代码补全
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'ervandew/supertab'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+" Syntax
+Plug 'dense-analysis/ale'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
+" Tree
+Plug 'preservim/nerdtree'
+
+" Complete
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+" Status line
+Plug 'vim-airline/vim-airline'
+
+call plug#end()
+
+" Color schemes should be loaded after plug#end().
+" We prepend it with 'silent!' to ignore errors when it's not yet installed.
+silent! colorscheme seoul256
+
 " Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+" :PlugInstall to install the plugins
+" :PlugUpdate to install or update the plugins
+" :PlugDiff to review the changes from the last update
+" :PlugClean to remove plugins no longer in the list
 
-au WinLeave * set nocursorline nocursorcolumn
-au WinEnter * set cursorline cursorcolumn
-highlight WhitespaceEOL ctermbg=red guibg=red
-match WhitespaceEOL /\s\+$/
+let g:coc_disable_startup_warning = 1
 
-let mapleader=";"
+" let mapleader=";"
 
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
+" set showcmd
+" set hidden
+" set mouse=a
+" set fileencodings=utf-8,bg18030,gbk,big5
+" set textwidth=80
+" set wildmenu
+" set ruler
+" set cursorline 
+" set cursorcolumn
+" set magic
+" set backspace=2
+" set tabstop=4
+" set shiftwidth=4
+" set softtabstop=4
+" set shiftround
+" set expandtab
+" set colorcolumn=+1
+" set autoindent
+" set nobackup
+" set ignorecase
+" set smartcase
+" set incsearch
+" set hlsearch
+" set smartindent
+" set foldenable
+" set foldmethod=syntax
+" set number
 
-" Show (partial) command in status line.
-set showcmd
-" Hide buffers when they are abandoned
-set hidden
-" Enable mouse usage (all modes)
-set mouse=a
-"Set fileencodings
-set fileencodings=utf-8,bg18030,gbk,big5
-" Make it obvious where 80 characters is
-set textwidth=80
 
-set wildmenu
-set ruler
-set cursorline 
-set cursorcolumn
-set magic
-set backspace=2
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set shiftround
-set expandtab
-set colorcolumn=+1
-set autoindent
-set nobackup
-set ignorecase
-set smartcase
-set incsearch
-set hlsearch
-set smartindent
-set foldenable
-set foldmethod=syntax
-set number
-
-" ### Universal Configuration ###
-
-" Plugin YouCompleteMe
-" Make YCM compatible with UltiSnips (Using supertab)
-let g:ycm_key_list_select_completion = []
-let g:ycm_key_list_previous_completion = []
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" Plugin The-NERD-tree
-let NERDChristmasTree=0
-let NERDTreeWinSize=35
-let NERDTreeWinPos="left"
-let NERDTreeshowHidden=1
-let NERDTreeChDirMode=2
-let NERDTreeIgnore=['\~$','\.pyc$','\.swp$']
-let NERDTreeShowBookmarks=1
-let NERDTreeMinimalUI=1
-let NERDTreeAutoDeleteBuffer=1
-" Automatically open a NERDTree if no files where specified
-autocmd vimenter * if !argc() | NERDTree | endif
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |q| endif
-" Open a NERDTree
-nmap <F5> : NERDTreeToggle<cr>
-
-" Plugin Tagbar
-let g:tagbar_width=35
-let g:tagbar_right=1
-"let g:tagbar_autofocus=1
-let g:tagbar_ctags_bin='ctags'
-nmap <F6> :TagbarToggle<cr>
-autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()
-
-" Plugin ctrlp
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.png,*.jpg,*jpeg,*.gif
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-if executable('ag')
-	" Use Ag over Grep
-	set grepprg=ag\ --nogroup\ --nocolor
-	" Use Ag in ctrlp for listing files.
-	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-	" Ag is fast enough that ctrlp doesn't need to cache
-	let g:ctrlp_use_caching = 0
-endif
-
-" Plugin vim-powerline
-set laststatus=2 "Always display the status line
-set statusline+=%{fugitive#statusline()} " Git hotness
-let g:Powerline_colorscheme='solarized256'
-
-" Plugin christoomey/vim-run-interactive
-nnoremap <Leader>r :RunInInteractiveShell<space>
-
-" Plugin scrooloose/syntastic
-let g:syntastic_check_on_open=1
-let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_wq = 0
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-" Plugin YouCompleteMe
-let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-
-" Plugin Indent guides
-let g:indent_guides_enable_on_vim_startup=1
-let g:indent_guides_start_level=2
-let g:indent_guides_guide_size=1
-nmap <silent> <Leader>i <Plug>IndentGuidesToggle
-
-" Plugin MiniBuf Explorer
-map <Leader>bl :MBEToggle<cr>
-map <C-Tab> :MBEbn<cr>
-map <C-S-Tab> :MBEbp<cr>
-
-" Leader set
-nmap <Leader>e :tabe<space>
-nmap <Leader>o :e<space>
-nmap <Leader>q :q<cr>
-nmap <Leader>w :w<cr>
-nmap <Leader>WQ :wa<CR>:q<CR>
-" 设置快捷键将选中文本块复制至系统剪贴板
-vnoremap <Leader>y "+y
-" 设置快捷键将系统剪贴板粘贴至vim
-nmap <Leader>p "+p
-" *.cpp和*.h间切换
-nmap <silent> <Leader>sw :FSHere<cr>
-" 一键编译
-nmap <Leader>m :wa<cr>:make<cr><cr>:cw<cr>
-
-set guioptions-=l
-set guioptions-=L
-set guioptions-=r
-set guioptions-=R
-set guioptions-=m
-set guioptions-=T
-set guifont=YaHei\ Consolas\ Hybrid\ 11.5
-
-"autocmd BufWritePost $MYVIMRC source $MYVIMRC
-" Source a global configuration file if available
-if filereadable("/etc/vim/vimrc.local")
-  source /etc/vim/vimrc.local
-endif
+" Plugin 'fcitx.vim'
+" Plugin 'ctrlp.vim'
+" Plugin 'christoomey/vim-run-interactive'
+" Plugin 'fholgado/minibufexpl.vim'
+" Plugin 'majutsushi/tagbar'
+" Plugin 'nathanaelkane/vim-indent-guides'
+" Plugin 'kshenoy/vim-signature'
+" Plugin 'ervandew/supertab'
+" Plugin 'honza/vim-snippets'
 
